@@ -108,18 +108,24 @@ public class DefaultMyList implements MyList {
 	@Override
 	public boolean containsAll(MyList c) {
 	    Object[] targetArray = c.toArray();
-	    Node localNode = first;
-	    if(localNode == null) {
+	    Object[] localArray = this.toArray();
+	    if(localArray.length == 0) {
             return false;
         }
+	    
+	    int localArrayTargetNumber = 0;
 	    for(int i = 0 ; i < targetArray.length ; i++)
-	        while(localNode != null) {
-	        	if (localNode.data != targetArray[i]) {
-	        		return false;
-	        	} else {
-	        		localNode = localNode.next;
-	        	}
-	        }
+	    	while (true) {
+		    	if (targetArray[i] == localArray[localArrayTargetNumber]) {
+		    		localArrayTargetNumber = 0;
+		    		break;
+		    	} else {
+		    		localArrayTargetNumber++;
+		    		if (localArrayTargetNumber == targetArray.length) {
+		    			return false;
+		    		}
+		    	}
+		    }
 	    return true;
 	}
 }
