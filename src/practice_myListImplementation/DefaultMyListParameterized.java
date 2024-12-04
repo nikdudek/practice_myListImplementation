@@ -1,6 +1,7 @@
 package practice_myListImplementation;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Doubly-linked list implementation of the MyList interface.  
@@ -14,9 +15,26 @@ import java.util.Iterator;
  */
 
 public class DefaultMyListParameterized<T> implements MyListParameterized<T>, ListIterableParameterized<T> {
+	
+	private Node<T> first;
+	private Node<T> last;
+	private int size;
 
-	public DefaultMyListParameterized() {
-		// TODO Auto-generated constructor stub
+	private static class Node<T> {
+		private Object data;
+		private Node<T> next;
+		private Node<T> prev;
+		
+		public Node(Node<T> prev, Object data, Node<T> next) {
+			this.next = next;
+			this.prev = prev;
+			this.data = data;
+		}
+			
+		@Override
+		public String toString() {
+			return data.toString();
+		}
 	}
 
 	@Override
@@ -39,7 +57,16 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		for( Node<T> x = first ; x != null ; ) {
+			Node<T> nextNode = x.next;
+			x.data = null;
+			x.prev = null;
+			x.next = null;
+			x = nextNode;
+		}
+		this.first = null;
+		this.last = null;
+		this.size = 0;
 
 	}
 
