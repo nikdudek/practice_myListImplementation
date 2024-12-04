@@ -51,8 +51,16 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 
 	@Override
 	public void add(T e) {
-		// TODO Auto-generated method stub
-
+		final Node<T> lastNode = last;
+	    final Node<T> newNode = new Node<>(lastNode, e, null);
+	    last = newNode;
+	    if (lastNode == null) {
+	        first = newNode;
+	    } else {
+	        lastNode.next = newNode;
+	    }
+	    
+	    size++;
 	}
 
 	@Override
@@ -67,37 +75,84 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 		this.first = null;
 		this.last = null;
 		this.size = 0;
-
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+	    Node<T> targetNode = first;
+	    if(targetNode == null) {
+            return false;
+    }
+	    while(targetNode.data != o) {
+	        targetNode = targetNode.next;
+	    }
+	    if(targetNode.prev != null)
+	        targetNode.prev.next = targetNode.next;
+        if(targetNode.next != null)
+	        targetNode.next.prev = targetNode.prev;
+        targetNode.next = null;
+	    targetNode.prev = null;
+	    targetNode.data = null;
+	    size--;
+	    return true;
 	}
 
 	@Override
 	public Object[] toArray() {
-		// TODO Auto-generated method stub
-		return null;
+	    if(size == 0)
+	        return null;
+	    Object[] arrayOfAllObjects = new Object[size];
+	    Node<T> targetNode = first;
+	    for(int i = 0 ; i < size ; i++) {
+	        arrayOfAllObjects[i] = targetNode.data;
+	        targetNode = targetNode.next;
+	    }
+	    return arrayOfAllObjects;
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.size;
 	}
 
 	@Override
 	public boolean contains(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+	    Node<T> targetNode = first;
+	    if(targetNode == null) {
+            return false;
+    }
+	    while(targetNode != null) {
+        	if (targetNode.data == o ) {
+        		return true;
+        	} else {
+        		targetNode = targetNode.next;
+        	}
+        }
+	    return false;
 	}
 
 	@Override
 	public boolean containsAll(MyListParameterized<?> c) {
-		// TODO Auto-generated method stub
-		return false;
+	    Object[] targetArray = c.toArray();
+	    Object[] localArray = this.toArray();
+	    if(localArray.length == 0) {
+            return false;
+        }
+	    
+	    int localArrayTargetNumber = 0;
+	    for(int i = 0 ; i < targetArray.length ; i++)
+	    	while (true) {
+		    	if (targetArray[i] == localArray[localArrayTargetNumber]) {
+		    		localArrayTargetNumber = 0;
+		    		break;
+		    	} else {
+		    		localArrayTargetNumber++;
+		    		if (localArrayTargetNumber == targetArray.length) {
+		    			return false;
+		    		}
+		    	}
+		    }
+	    return true;
 	}
 
 }
