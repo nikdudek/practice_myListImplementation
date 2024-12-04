@@ -39,14 +39,58 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 
 	@Override
 	public Iterator<T> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ListIteratorImplParameterized<>();
 	}
-
+	
 	@Override
 	public ListIteratorParameterized<T> listIterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ListIteratorImplParameterized<>();
+	}
+	
+	private class ListIteratorImplParameterized<T> extends IteratorImpl<T> implements ListIteratorParameterized<T> {
+
+		@Override
+		public boolean hasPrevious() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public T previous() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void set(T e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	private class IteratorImpl<T> implements Iterator<T> {
+		
+		int cursor = 0;
+		int lastRet = -1;
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public T next() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+		@Override
+		public void remove() {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 
 	@Override
