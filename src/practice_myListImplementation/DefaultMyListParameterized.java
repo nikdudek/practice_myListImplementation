@@ -191,10 +191,6 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 	}
 	
 	private class ListIteratorImplParameterized<T> extends IteratorImpl<T> implements ListIteratorParameterized<T> {
-		
-		int cursor = size;
-		int lastRet = -1;
-		
 
 		@Override
 		public boolean hasPrevious() {
@@ -203,12 +199,12 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 
 		@Override
 		public T previous() {
+		    cursor -= 1;
 		    Node<T> prev = (Node<T>)getNodeByIndex(cursor);
 		    if (prev == null) {
 		        throw new NoSuchElementException();
 		    }
 		    lastRet = cursor;
-		    cursor -= 1;
 		    return prev.data;
 		}
 
