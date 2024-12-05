@@ -143,6 +143,33 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 	    return true;
 	}
 	
+	public T removeNodeByIndex(int index) {
+		return unlink(getNodeByIndex(index));
+	}
+	
+	T unlink(Node<T> element) {
+		T obj = element.data;
+		Node<T> next = element.next;
+		Node<T> previous = element.prev;
+			
+		if (previous == null) {
+			first = next;
+		} else {
+			previous.next = next;
+			element.prev = null;
+		}
+		if (next == null) {
+			last = previous;
+		} else {
+			next.prev = previous;
+			element.next = null;
+		}
+			
+		element.data = null;
+		size--;
+		return obj;	
+	}
+	
 	public Node<T> getNodeByIndex(int index) {
 		if (index > (size -1)) {
 			return null;
@@ -164,23 +191,37 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 	}
 	
 	private class ListIteratorImplParameterized<T> extends IteratorImpl<T> implements ListIteratorParameterized<T> {
+		
+		int cursor = size;
+		int lastRet = -1;
+		
 
 		@Override
 		public boolean hasPrevious() {
-			// TODO Auto-generated method stub
-			return false;
+			return cursor != 0;
 		}
 
 		@Override
 		public T previous() {
-			// TODO Auto-generated method stub
-			return null;
+		    Node<T> prev = (Node<T>)getNodeByIndex(cursor);
+		    if (prev == null) {
+		        throw new NoSuchElementException();
+		    }
+		    lastRet = cursor;
+		    cursor -= 1;
+		    return prev.data;
 		}
 
 		@Override
 		public void set(T e) {
-			// TODO Auto-generated method stub
-			
+			if (lastRet == -1) {
+		        throw new IllegalStateException();
+		    }
+		    
+		    Node<T> targetNode = (Node<T>)DefaultMyListParameterized.this.getNodeByIndex(lastRet);
+		    targetNode.data = e;
+		    
+		    lastRet = -1;
 		}
 	}
 	
@@ -207,8 +248,16 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 		
 		@Override
 		public void remove() {
-			// TODO Auto-generated method stub
-			
+			if (lastRet == -1) {
+		        throw new IllegalStateException();
+		    }
+		    
+		    DefaultMyListParameterized.this.removeNodeByIndex(lastRet);
+		    if (lastRet < cursor) {
+		        cursor--;
+		    }
+		    
+		    lastRet = -1;
 		}
 	}
 	
