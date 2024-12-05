@@ -21,11 +21,11 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 	private int size;
 
 	private static class Node<T> {
-		private Object data;
+		private T data;
 		private Node<T> next;
 		private Node<T> prev;
 		
-		public Node(Node<T> prev, Object data, Node<T> next) {
+		public Node(Node<T> prev, T data, Node<T> next) {
 			this.next = next;
 			this.prev = prev;
 			this.data = data;
@@ -36,63 +36,7 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 			return data.toString();
 		}
 	}
-
-	@Override
-	public Iterator<T> iterator() {
-		return new ListIteratorImplParameterized<>();
-	}
 	
-	@Override
-	public ListIteratorParameterized<T> listIterator() {
-		return new ListIteratorImplParameterized<>();
-	}
-	
-	private class ListIteratorImplParameterized<T> extends IteratorImpl<T> implements ListIteratorParameterized<T> {
-
-		@Override
-		public boolean hasPrevious() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public T previous() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public void set(T e) {
-			// TODO Auto-generated method stub
-			
-		}
-	}
-	
-	private class IteratorImpl<T> implements Iterator<T> {
-		
-		int cursor = 0;
-		int lastRet = -1;
-
-		@Override
-		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public T next() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		@Override
-		public void remove() {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-
 	@Override
 	public void add(T e) {
 		final Node<T> lastNode = last;
@@ -198,5 +142,83 @@ public class DefaultMyListParameterized<T> implements MyListParameterized<T>, Li
 		    }
 	    return true;
 	}
+	
+	public Node<T> getNodeByIndex(int index) {
+		if (index > (size -1)) {
+			return null;
+		}
+		
+		if (index < (size >> 1)) {
+            Node<T> x = first;
+            for (int i = 0; i < index; i++) {
+				x = x.next;
+			}
+            return x;
+        } else {
+            Node<T> x = last;
+            for (int i = size - 1; i > index; i--) {
+				x = x.prev;
+			}
+            return x;
+        }
+	}
+	
+	private class ListIteratorImplParameterized<T> extends IteratorImpl<T> implements ListIteratorParameterized<T> {
 
+		@Override
+		public boolean hasPrevious() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public T previous() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void set(T e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	private class IteratorImpl<T> implements Iterator<T> {
+		
+		int cursor = 0;
+		int lastRet = -1;
+
+		@Override
+		public boolean hasNext() {
+			return cursor != size;
+		}
+
+		@Override
+		public T next() {
+		    Node<T> next = (Node<T>)getNodeByIndex(cursor);
+		    if (next == null) {
+		        throw new NoSuchElementException();
+		    }
+		    lastRet = cursor;
+		    cursor += 1;
+		    return next.data;
+		}
+		
+		@Override
+		public void remove() {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	
+	@Override
+	public Iterator<T> iterator() {
+		return new ListIteratorImplParameterized<>();
+	}
+	
+	@Override
+	public ListIteratorParameterized<T> listIterator() {
+		return new ListIteratorImplParameterized<>();
+	}
 }
